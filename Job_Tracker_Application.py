@@ -2,21 +2,16 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 from snowflake.snowpark import Session
-import toml
 
-## Creating the title for the Streamlit Website 
+# Creating the title for the Streamlit Website 
 st.title('❄️ Job Application Tracking System - V1')
-st.caption('This is an application used to save job applications applied!')
-## Loading in the Credential
-# Load Snowflake configurations from secrets.toml file
-with open("secrets.toml", "r") as f:
-    config = toml.load(f)
+st.caption('This is an application used to save applied job applications!')
 
-# Extract Snowflake credentials
+# Extract Snowflake credentials from Streamlit secrets
 snowflake_config = {
-    "user": config["snowflake"]["username"],
-    "password": config["snowflake"]["password"],
-    "account": config["snowflake"]["account"]
+    "user": st.secrets["snowflake"]["username"],
+    "password": st.secrets["snowflake"]["password"],
+    "account": st.secrets["snowflake"]["account"]
 }
 
 # Establish Snowflake session
@@ -47,7 +42,7 @@ def refresh_data():
 with st.expander("See Table"):
     df = refresh_data()
 
-## Adding user input to the database using sidebar
+# Adding user input to the database using sidebar
 st.sidebar.subheader("Add New Job Application")
 User_Input = st.sidebar.text_input("User:")
 role = st.sidebar.text_input("Role:")
@@ -72,7 +67,7 @@ if st.sidebar.button("Save to Database"):
     else:
         st.sidebar.error("Please fill in all fields.")
 
-## Deleting a record from the database by index
+# Deleting a record from the database by index
 st.sidebar.subheader("Delete Job Application by Index")
 delete_index = st.sidebar.number_input("Enter Index to Delete:", min_value=0, step=1)
 
@@ -86,7 +81,7 @@ if st.sidebar.button("Delete Record"):
     else:
         st.sidebar.error("Invalid index. Please enter a valid index.")
 
-## Modifying a record in the database by index
+# Modifying a record in the database by index
 st.sidebar.subheader("Modify Job Application by Index")
 modify_index = st.sidebar.number_input("Enter Index to Modify:", min_value=0, step=1)
 
@@ -115,9 +110,7 @@ if modify_index in df.index:
         st.sidebar.success("Record updated successfully!")
         df = refresh_data()
 
-
-
-## Bar chart showing count of applications per user
+# Bar chart showing count of applications per user
 st.subheader("Job Applications per User")
 x_axis_option = st.radio("Select X-Axis Variable:", ["USER_INPUT", "ROLE", "COMPANY", "CITY"])
 
@@ -133,8 +126,7 @@ if not df.empty:
 else:
     st.write("No data available to display chart.")
 
-
-## Line Chart of Job Applications Over Time
+# Line Chart of Job Applications Over Time
 st.subheader("Job Applications Over Time")
 
 if not df.empty:
