@@ -26,7 +26,6 @@ st.success("Connected to Snowflake!")
 def load_data(table_name):
     st.write(f"Here's some example data from `{table_name}`:")
     table = session.table(table_name)
-    table = table.limit(100)
     table = table.collect()
     return pd.DataFrame(table)
 
