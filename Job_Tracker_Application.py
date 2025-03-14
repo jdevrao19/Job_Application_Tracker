@@ -111,7 +111,7 @@ if modify_index in df.index:
 
 # Bar chart showing count of applications per user
 st.subheader("Job Applications per User")
-x_axis_option = st.radio("Select X-Axis Variable:", ["USER_INPUT", "ROLE", "COMPANY", "CITY"])
+x_axis_option = st.radio("Select X-Axis Variable:", ["USER_INPUT", "ROLE", "COMPANY", "CITY", "OUTCOME"])
 
 if not df.empty:
     user_counts = df[x_axis_option].value_counts().reset_index()
